@@ -7,6 +7,7 @@ import { CategoryType } from "../../lib/types/category";
 import axios from "axios";
 import { useDidMount } from "../../lib/hooks/useDidMount";
 import LoginDrawer from "../user/LoginDrawer";
+import { useCategories } from "../../lib/context/CategoriesContext";
 
 const StickyHeaderContainer = styled.header`
   width: 100%;
@@ -58,15 +59,15 @@ const CategoryNav = styled.nav`
 `;
 
 function StickyHeader() {
-  const [categories, setCategories] = useState<CategoryType[]>([]);
+  const { categories } = useCategories();
 
   //TODO rework this into context usage
-  useDidMount(async () => {
-    const url = "https://quacky-clean-be.herokuapp.com" + "/categories";
-    console.log(url);
-    const data: CategoryType[] = await (await axios.get(url)).data;
-    setCategories(data);
-  });
+  // useDidMount(async () => {
+  //   const url = "https://quacky-clean-be.herokuapp.com" + "/categories";
+  //   console.log(url);
+  //   const data: CategoryType[] = await (await axios.get(url)).data;
+  //   setCategories(data);
+  // });
 
   return (
     <StickyHeaderContainer>

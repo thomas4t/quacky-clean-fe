@@ -1,26 +1,37 @@
 import axios from "axios";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { useRouter } from "next/router";
+import React from "react";
 import styled from "styled-components";
-import { CategoryType } from "../../lib/types/category";
+import Loader from "../../components/common/Loader";
+import CategoryAPI from "../../lib/api/category";
+import ProductAPI from "../../lib/api/product";
 import { ProductType } from "../../lib/types/product";
-import { SERVER_BACKEND_URL } from "../../lib/utils/constants";
-
-type Props = { products: ProductType[] };
+import { getGlobalData, withGlobalData } from "../../lib/utils/globalData";
 
 const ProductsContainer = styled.div`
   max-width: 80vw;
   margin: 15px auto;
 `;
 
-function CategoryPage(props: Props) {
-  const { products } = props;
+function CategoryPage(props: { products: ProductType[] }) {
   const router = useRouter();
-  const { id } = router.query;
+  const { products } = props;
+  const { query, isFallback } = router;
+
+  // If the page is not yet generated, this will be displayed
+  // initially until getStaticProps() finishes running
+  if (isFallback) {
+    return <Loader />;
+  }
+
+  if (products.length === 0) {
+    return <h2>Category not found - 404</h2>;
+  }
 
   return (
     <ProductsContainer>
-      <p>Category page: {id}</p>
+      <p>Category page: {query.id}</p>
       {products.map((product) => {
         return (
           <div key={product.ID_Product}>
@@ -35,40 +46,32 @@ function CategoryPage(props: Props) {
   );
 }
 
-// New version of getInitialdata
-export const getStaticProps: GetStaticProps = async (context) => {
-  // TODO
-  // Update product categories
-  // maybe have it in utils/loadCategories
-  // make sure it uses context API
-  // since it should be called on server, we will have access to our constants
-  //const url = BACKEND_URL + "/categories";
-
-  //TODO wrap this in state management
-  const categoryId = context.params?.id || "";
-  const url = SERVER_BACKEND_URL + `/products/category/${categoryId}`;
-  const products: ProductType[] = await (await axios.get(url)).data;
-
-  return {
-    props: {
-      products,
-    },
-  };
-};
-
 //called at build time
 export const getStaticPaths: GetStaticPaths = async () => {
-  //TODO wrap this in state management
-  const url = SERVER_BACKEND_URL + "/categories";
-  const categories: CategoryType[] = await (await axios.get(url)).data;
-
+  const categories = await CategoryAPI.getAll();
   const paths = categories.map((ctg) => ({
     params: { id: String(ctg.ID_Category) },
   }));
-
-  // We'll pre-render only these paths at build time.
-  // { fallback: false } means other routes should 404.
-  return { paths, fallback: false };
+  // Enable statically generating additional pages
+  // Fallback ensures we have up to date paths
+  return { paths, fallback: true };
 };
 
-export default CategoryPage;
+// New version of getInitialdata
+export const getStaticProps: GetStaticProps = async (ctx) => {
+  const data = await getGlobalData();
+  const categoryId = ctx.params?.id || "";
+  const products = await ProductAPI.get(Number(categoryId));
+  return {
+    props: {
+      ...data,
+      products,
+    },
+    // Next.js will attempt to re-generate the page:
+    // - When a request comes in
+    // - At most once every second
+    revalidate: 1,
+  };
+};
+
+export default withGlobalData(CategoryPage);

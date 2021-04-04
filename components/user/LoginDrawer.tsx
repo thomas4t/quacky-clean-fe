@@ -2,6 +2,7 @@ import { Button, Drawer, IconButton } from "@material-ui/core";
 import React from "react";
 import styled from "styled-components";
 import AccountBoxIcon from "@material-ui/icons/AccountBox";
+import { useAccount } from "../../lib/context/AccountContext";
 
 const DrawerContent = styled.div`
   margin: 15px;
@@ -11,7 +12,12 @@ const UserIcon = styled(AccountBoxIcon)`
   color: #fff;
 `;
 
+const StyledButton = styled(Button)`
+  color: #fff;
+`;
+
 export default function LoginDrawer() {
+  const account = useAccount();
   const [isOpen, setIsOpen] = React.useState(false);
 
   const toggleDrawer = () => (
@@ -30,10 +36,18 @@ export default function LoginDrawer() {
 
   return (
     <div>
-      <span>Login and stuff</span>
-      <IconButton onClick={() => setIsOpen(true)}>
+      <StyledButton>
+        {account.isLogged ? (
+          <span>{account.activeUser}</span>
+        ) : (
+          <span>Login</span>
+        )}
         <UserIcon fontSize="large" />
-      </IconButton>
+      </StyledButton>
+
+      {/* <IconButton onClick={() => setIsOpen(true)}>
+        
+      </IconButton> */}
       <Drawer anchor="right" open={isOpen} onClose={() => setIsOpen(false)}>
         <DrawerContent>Login stuff here </DrawerContent>
       </Drawer>

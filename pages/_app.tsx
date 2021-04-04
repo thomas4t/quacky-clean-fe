@@ -6,6 +6,7 @@ import Head from "next/head";
 import { StylesProvider } from "@material-ui/core";
 import { ThemeProvider } from "styled-components";
 import { theme } from "../lib/utils/theme";
+import ContextProvider from "../lib/context";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -20,12 +21,11 @@ function MyApp({ Component, pageProps }: AppProps) {
 
       <StylesProvider injectFirst>
         <ThemeProvider theme={theme}>
-          {/* This isnt implemented yet (state management) */}
-          {/* <ContextProvider> */}
-          <ResponsiveLayout>
-            <Component {...pageProps} />
-          </ResponsiveLayout>
-          {/* </ContextProvider> */}
+          <ContextProvider>
+            <ResponsiveLayout>
+              <Component {...pageProps} />
+            </ResponsiveLayout>
+          </ContextProvider>
         </ThemeProvider>
       </StylesProvider>
     </>
