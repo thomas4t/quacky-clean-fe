@@ -1,10 +1,10 @@
 import { CategoryType } from "./category";
-import { LoginData, LoginResponse } from "./user";
+import { LoginData } from "./user";
 
 export type AccountContextState = {
   activeUser: string;
   isLogged: boolean;
-  login: (payload: LoginData) => void;
+  login: (payload: LoginData) => Promise<boolean>;
   logout: () => void;
 };
 

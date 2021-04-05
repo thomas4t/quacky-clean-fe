@@ -6,8 +6,12 @@ import { Button, Typography } from "@material-ui/core";
 import { CategoryType } from "../../lib/types/category";
 import axios from "axios";
 import { useDidMount } from "../../lib/hooks/useDidMount";
-import LoginDrawer from "../user/LoginDrawer";
+import LoginDrawer from "../user/AccountDrawer";
 import { useCategories } from "../../lib/context/CategoriesContext";
+import { useAccount } from "../../lib/context/AccountContext";
+import AccountDrawer from "../user/AccountDrawer";
+import LockOpenIcon from "@material-ui/icons/LockOpen";
+import { AppButton } from "./AppButton";
 
 const StickyHeaderContainer = styled.header`
   width: 100%;
@@ -58,7 +62,26 @@ const CategoryNav = styled.nav`
   }
 `;
 
+const UserSection = styled("div")`
+  width: 25%;
+  text-align: right;
+  margin-right: 20px;
+`;
+
+function HomeLogoButton() {
+  return (
+    <div style={{ width: "25%" }}>
+      <Button>
+        <AppLink to="homepage">
+          <AppLogo />
+        </AppLink>
+      </Button>
+    </div>
+  );
+}
+
 function StickyHeader() {
+  const account = useAccount();
   const { categories } = useCategories();
 
   //TODO rework this into context usage
@@ -71,18 +94,7 @@ function StickyHeader() {
 
   return (
     <StickyHeaderContainer>
-      {/* <AppLink to="homepage">
-        
-      </AppLink>
-      <AppLink to="category">Link to cat only</AppLink>
-      <AppLink to="category" extraParam="2">
-        Link to cat2
-      </AppLink> */}
-      <Button>
-        <AppLink to="homepage">
-          <AppLogo />
-        </AppLink>
-      </Button>
+      <HomeLogoButton />
 
       <CategoryNav>
         <ul>
@@ -102,7 +114,16 @@ function StickyHeader() {
         </ul>
       </CategoryNav>
 
-      <LoginDrawer />
+      <UserSection>
+        {account.isLogged ? (
+          <AccountDrawer />
+        ) : (
+          <AppButton>
+            <AppLink to="login">LOGIN</AppLink>
+            <LockOpenIcon fontSize="large" />
+          </AppButton>
+        )}
+      </UserSection>
     </StickyHeaderContainer>
   );
 }

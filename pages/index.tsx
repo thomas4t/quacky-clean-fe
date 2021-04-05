@@ -10,6 +10,7 @@ import webClient from "../lib/utils/webClient";
 import { localStorageApi } from "../lib/utils/localStorage";
 import { SmsOutlined } from "@material-ui/icons";
 import { useAccount } from "../lib/context/AccountContext";
+import FullWidthContainer from "../components/containers/FullWidthContainer";
 
 const IndexPageContainer = styled.div`
   display: flex;
@@ -26,13 +27,6 @@ const MainDuckImage = styled(Image)`
  * This is basically homepage - found at /
  */
 function IndexPage() {
-  const account = useAccount();
-  const [displayLoader, setDisplayLoader] = useState(false);
-
-  const toggleLoader = () => {
-    setDisplayLoader((currVal) => !currVal);
-  };
-
   return (
     <>
       <Head>
@@ -40,46 +34,17 @@ function IndexPage() {
         <meta name="description" content="Homepage of our awesome shop" />
       </Head>
 
-      <IndexPageContainer>
-        <h1>Welcome to our HOME PAGE!</h1>
-        <h2>We sell ducks and other goodies, make sure you look around!</h2>
-        <MainDuckImage alt="duck" src="/duck.jpg" width={700} height={400} />
-        <span>(this duck will mess you up if u don't)</span>
-        <hr />
-        <button
-          onClick={async () => {
-            // console.log(localStorageApi.getValue("token"));
-            try {
-              const res = await webClient.get("/cart");
-              console.log(res);
-            } catch (error) {
-              console.log(error);
-            }
-          }}
-        >
-          send req to cart
-        </button>
-        <button
-          onClick={async () => {
-            // console.log(localStorageApi.getValue("token"));
-            try {
-              const res = account.login({
-                username: "tomas",
-                password: "tomas",
-              });
-              console.log(res);
-            } catch (error) {
-              console.log(error);
-            }
-          }}
-        >
-          login
-        </button>
-        <button onClick={account.logout}>Logout</button>
-        {/* This should probably be deleted later */}
-        <Button onClick={toggleLoader}>Toggle loader</Button>
-        {displayLoader && <Loader />}
-      </IndexPageContainer>
+      <FullWidthContainer>
+        <IndexPageContainer>
+          <h1>Welcome to our HOME PAGE!</h1>
+          <h2>We sell ducks and other goodies, make sure you look around!</h2>
+          <hr />
+          <MainDuckImage alt="duck" src="/duck.jpg" width={700} height={400} />
+          <span>(this duck will mess you up if u don't)</span>
+
+          <hr />
+        </IndexPageContainer>
+      </FullWidthContainer>
     </>
   );
 }

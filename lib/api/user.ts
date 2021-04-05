@@ -1,3 +1,4 @@
+import { AxiosResponse } from "axios";
 import {
   LoginData,
   LoginResponse,
@@ -49,13 +50,13 @@ const UserAPI = {
     //Token hasn't been found or is invalid
     return { isValid: false };
   },
-  login: async (payload: LoginData): Promise<LoginResponse | null> => {
+  login: async (payload: LoginData): Promise<AxiosResponse<LoginResponse>> => {
     try {
       //TODO this should probably be in request body
       const res = await webClient.post(
         `/auth/login?username=${payload.username}&password=${payload.password}`
       );
-      return res.data;
+      return res;
     } catch (error) {
       return error.response;
     }

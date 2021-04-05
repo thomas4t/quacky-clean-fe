@@ -1,3 +1,4 @@
+import { resolve } from "node:path";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import UserAPI from "../api/user";
 import { useDidMount } from "../hooks/useDidMount";
@@ -9,7 +10,10 @@ import webClient from "../utils/webClient";
 const initialValues: AccountContextState = {
   activeUser: "",
   isLogged: false,
-  login: ({}) => {},
+  login: ({}) =>
+    new Promise((resolve) => {
+      resolve(false);
+    }),
   logout: () => {},
 };
 
@@ -31,14 +35,19 @@ export const AccountProvider: React.FC = ({ children }) => {
     webClient.defaults.headers.common["Authorization"] = "";
   };
 
-  const login = async (payload: LoginData) => {
+  const login = async (payload: LoginData): Promise<boolean> => {
     //TODO change response data to include errors?
     const res = await UserAPI.login(payload);
-    if (res) {
-      updateJWT(res.access_token);
-      setIsLogged(true);
+
+    let didOkay = false;
+    if (res.status === 201) {
+      didOkay = true;
+      updateJWT(res.data.access_token);
       setActiveUser(payload.username);
+      setIsLogged(true);
     }
+
+    return didOkay;
   };
 
   const logout = async () => {
