@@ -1,10 +1,13 @@
 import React from "react";
 import { AccountProvider } from "./AccountContext";
 import { CategoriesProvider } from "./CategoriesContext";
+import { CartProvider } from "./CartContext";
 
 const ContextProvider: React.FC = ({ children }) => (
   <AccountProvider>
-    <CategoriesProvider>{children}</CategoriesProvider>
+    <CartProvider>
+      <CategoriesProvider>{children}</CategoriesProvider>
+    </CartProvider>
   </AccountProvider>
 );
 

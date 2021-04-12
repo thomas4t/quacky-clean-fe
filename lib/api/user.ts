@@ -4,7 +4,6 @@ import {
   LoginResponse,
   TokenValidationPayload,
 } from "../types/user";
-import { localStorageApi } from "../utils/localStorage";
 import webClient from "../utils/webClient";
 
 const UserAPI = {
@@ -24,39 +23,26 @@ const UserAPI = {
   //   },
   /**
    * Validates current JWT Token
-   * @returns whether token is present && valid
    */
-  validateCurrentToken: async (): Promise<
-    | ({ isValid: true; token: string } & TokenValidationPayload)
-    | { isValid: false }
-  > => {
-    const token = localStorageApi.getValue("token");
-    if (token) {
-      //Token has been saved to storage before
-      try {
-        const res = await webClient.get(`/auth/verify-token`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        if (res.status === 200) {
-          //Token is valid
-          return { isValid: true, token, ...res.data };
-        }
-      } catch (err) {
-        console.error(err);
-      }
+  validateToken: async (
+    token: string
+  ): Promise<AxiosResponse<TokenValidationPayload>> => {
+    try {
+      return await webClient.get(`/auth/verify-token`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    } catch (err) {
+      return err.response;
     }
-    //Token hasn't been found or is invalid
-    return { isValid: false };
   },
   login: async (payload: LoginData): Promise<AxiosResponse<LoginResponse>> => {
     try {
       //TODO this should probably be in request body
-      const res = await webClient.post(
+      return await webClient.post(
         `/auth/login?username=${payload.username}&password=${payload.password}`
       );
-      return res;
     } catch (error) {
       return error.response;
     }

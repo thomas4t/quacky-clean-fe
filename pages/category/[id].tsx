@@ -1,18 +1,13 @@
-import axios from "axios";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { useRouter } from "next/router";
 import React from "react";
-import styled from "styled-components";
 import Loader from "../../components/common/Loader";
 import CategoryAPI from "../../lib/api/category";
 import ProductAPI from "../../lib/api/product";
 import { ProductType } from "../../lib/types/product";
 import { getGlobalData, withGlobalData } from "../../lib/utils/globalData";
-
-const ProductsContainer = styled.div`
-  max-width: 80vw;
-  margin: 15px auto;
-`;
+import ProductCard from "../../components/product/ProductCard";
+import FullWidthContainer from "../../components/containers/FullWidthContainer";
 
 function CategoryPage(props: { products: ProductType[] }) {
   const router = useRouter();
@@ -30,19 +25,12 @@ function CategoryPage(props: { products: ProductType[] }) {
   }
 
   return (
-    <ProductsContainer>
-      <p>Category page: {query.id}</p>
-      {products.map((product) => {
-        return (
-          <div key={product.ID_Product}>
-            <h2>{product.name_p}</h2>
-            <span>{product.description_p}</span>
-            <span>{product.color}</span>
-            <hr />
-          </div>
-        );
-      })}
-    </ProductsContainer>
+    <FullWidthContainer>
+      <h1>Category {query.id}</h1>
+      {products.map((product) => (
+        <ProductCard key={product.ID_Product} item={product} />
+      ))}
+    </FullWidthContainer>
   );
 }
 
@@ -57,7 +45,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
   return { paths, fallback: true };
 };
 
-// New version of getInitialdata
 export const getStaticProps: GetStaticProps = async (ctx) => {
   const data = await getGlobalData();
   const categoryId = ctx.params?.id || "";

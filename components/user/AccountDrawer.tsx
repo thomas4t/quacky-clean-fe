@@ -1,10 +1,9 @@
-import { Button, Drawer, IconButton } from "@material-ui/core";
+import { Drawer } from "@material-ui/core";
 import React from "react";
 import styled from "styled-components";
 import AccountBoxIcon from "@material-ui/icons/AccountBox";
 import { AppButton } from "../common/AppButton";
 import { useAccount } from "../../lib/context/AccountContext";
-import webClient from "../../lib/utils/webClient";
 
 const DrawerContent = styled.div`
   display: flex;
@@ -54,21 +53,6 @@ export default function AccountDrawer() {
           </div>
 
           <TopMarginFiller />
-
-          <AppButton
-            onClick={async () => {
-              try {
-                const res = await webClient.get("/cart");
-                console.log(res);
-              } catch (error) {
-                console.log(error);
-              }
-            }}
-            color="primary"
-            variant="contained"
-          >
-            Send req to cart (result in console)
-          </AppButton>
 
           <AppButton onClick={onLogout} color="secondary" variant={"outlined"}>
             <strong>LOGOUT</strong>

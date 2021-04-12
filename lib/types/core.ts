@@ -3,7 +3,8 @@ export type AppPagesNames =
   | "profile"
   | "homepage"
   | "login"
-  | "register";
+  | "register"
+  | "cart";
 //   | 'invoice'
 //   | 'register'
 //   | 'register-lite'
@@ -14,7 +15,7 @@ export type AppPagesNames =
 //   | 'favorite'
 //   | 'watchdog'
 //   | 'quick-order'
-//   | 'cart'
+
 //   | 'account'
 //   | 'users'
 //   | 'articles'

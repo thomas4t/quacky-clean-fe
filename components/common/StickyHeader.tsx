@@ -1,19 +1,21 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import StrikethroughSIcon from "@material-ui/icons/StrikethroughS";
 import AppLink from "./AppLink";
 import { Button, Typography } from "@material-ui/core";
-import { CategoryType } from "../../lib/types/category";
-import axios from "axios";
-import { useDidMount } from "../../lib/hooks/useDidMount";
-import LoginDrawer from "../user/AccountDrawer";
 import { useCategories } from "../../lib/context/CategoriesContext";
 import { useAccount } from "../../lib/context/AccountContext";
 import AccountDrawer from "../user/AccountDrawer";
 import LockOpenIcon from "@material-ui/icons/LockOpen";
 import { AppButton } from "./AppButton";
+import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
+import { useNavigateTo } from "../../lib/hooks/useNavigateTo";
+import { HEADER_Z_INDEX } from "../../lib/utils/constants";
 
 const StickyHeaderContainer = styled.header`
+  position: fixed;
+  top: 0;
+  z-index: ${HEADER_Z_INDEX};
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -33,9 +35,11 @@ const CategoryNav = styled.nav`
     position: relative;
     text-decoration: none;
     color: #fff;
+
     :hover {
       color: #fff;
     }
+
     ::before {
       content: "";
       position: absolute;
@@ -48,14 +52,17 @@ const CategoryNav = styled.nav`
       transform: scaleX(0);
       transition: all 0.15s ease-in-out 0s;
     }
+
     :hover::before {
       visibility: visible;
       transform: scaleX(1);
     }
   }
+
   ul {
     list-style-type: none;
   }
+
   li {
     display: inline-block;
     margin: 0 15px;
@@ -66,6 +73,11 @@ const UserSection = styled("div")`
   width: 25%;
   text-align: right;
   margin-right: 20px;
+`;
+
+const LoggedInSection = styled("div")`
+  display: flex;
+  justify-content: flex-end;
 `;
 
 function HomeLogoButton() {
@@ -82,15 +94,16 @@ function HomeLogoButton() {
 
 function StickyHeader() {
   const account = useAccount();
+  const navigateTo = useNavigateTo();
   const { categories } = useCategories();
 
-  //TODO rework this into context usage
-  // useDidMount(async () => {
-  //   const url = "https://quacky-clean-be.herokuapp.com" + "/categories";
-  //   console.log(url);
-  //   const data: CategoryType[] = await (await axios.get(url)).data;
-  //   setCategories(data);
-  // });
+  const navigateToCart = async () => {
+    await navigateTo("cart");
+  };
+
+  const navigateToLogin = async () => {
+    await navigateTo("login");
+  };
 
   return (
     <StickyHeaderContainer>
@@ -116,10 +129,17 @@ function StickyHeader() {
 
       <UserSection>
         {account.isLogged ? (
-          <AccountDrawer />
+          <LoggedInSection>
+            <AppButton onClick={navigateToCart}>
+              Cart
+              <ShoppingCartIcon fontSize="large" />
+            </AppButton>
+
+            <AccountDrawer />
+          </LoggedInSection>
         ) : (
-          <AppButton>
-            <AppLink to="login">LOGIN</AppLink>
+          <AppButton onClick={navigateToLogin}>
+            <span>Login</span>
             <LockOpenIcon fontSize="large" />
           </AppButton>
         )}

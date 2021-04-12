@@ -1,16 +1,10 @@
 import Head from "next/head";
 import styled from "styled-components";
-import Image from "next/image";
-import React, { useState } from "react";
-import Loader from "../components/common/Loader";
-import { Button } from "@material-ui/core";
+import React from "react";
 import { GetStaticProps } from "next";
 import { getGlobalData, withGlobalData } from "../lib/utils/globalData";
-import webClient from "../lib/utils/webClient";
-import { localStorageApi } from "../lib/utils/localStorage";
-import { SmsOutlined } from "@material-ui/icons";
-import { useAccount } from "../lib/context/AccountContext";
 import FullWidthContainer from "../components/containers/FullWidthContainer";
+import massiveDuck from "../images/duck.jpg";
 
 const IndexPageContainer = styled.div`
   display: flex;
@@ -19,8 +13,8 @@ const IndexPageContainer = styled.div`
   align-items: center;
 `;
 
-const MainDuckImage = styled(Image)`
-  width: 70%;
+const MainDuckImage = styled("img")`
+  width: 50%;
 `;
 
 /**
@@ -39,7 +33,7 @@ function IndexPage() {
           <h1>Welcome to our HOME PAGE!</h1>
           <h2>We sell ducks and other goodies, make sure you look around!</h2>
           <hr />
-          <MainDuckImage alt="duck" src="/duck.jpg" width={700} height={400} />
+          <MainDuckImage alt="duck" src={massiveDuck} />
           <span>(this duck will mess you up if u don't)</span>
 
           <hr />
@@ -49,7 +43,7 @@ function IndexPage() {
   );
 }
 
-export const getStaticProps: GetStaticProps = async (ctx) => {
+export const getStaticProps: GetStaticProps = async () => {
   const data = await getGlobalData();
   return {
     props: { ...data },

@@ -1,7 +1,13 @@
 import { Field, Form, Formik, FormikHelpers } from "formik";
-import React from "react";
+import React, { useState } from "react";
 import { useAccount } from "../../lib/context/AccountContext";
-import { AppButton } from "../common/AppButton";
+import styled from "styled-components";
+import { Button } from "@material-ui/core";
+
+const LoginContainer = styled.div`
+  display: flex;
+  justify-content: center;
+`;
 
 interface MyFormValues {
   username: string;
@@ -10,21 +16,23 @@ interface MyFormValues {
 
 const LoginForm: React.FC<{}> = () => {
   const account = useAccount();
+  const [isError, setIsError] = useState(false);
   const initialValues: MyFormValues = { username: "", password: "" };
 
   const onSubmit = async (
     values: MyFormValues,
     actions: FormikHelpers<MyFormValues>
   ) => {
-    const username = values.username.trim();
-    const password = values.password.trim();
+    setIsError(false);
+
     const wasSuccess = await account.login({
-      username,
-      password,
+      username: values.username.trim(),
+      password: values.password.trim(),
     });
     if (wasSuccess) {
-      //TODO
       alert("Success!");
+    } else {
+      setIsError(true);
     }
 
     // console.log({ values, actions });
@@ -32,14 +40,15 @@ const LoginForm: React.FC<{}> = () => {
   };
 
   return (
-    <>
+    <LoginContainer>
       {account.isLogged ? (
         <div>Already signed in!</div>
       ) : (
         <Formik initialValues={initialValues} onSubmit={onSubmit}>
           <Form>
-            <div>
-              <label htmlFor="username">Username</label>
+            <div style={{ margin: "10px" }}>
+              <label htmlFor="username">Username: </label>
+
               <Field
                 id="username"
                 name="username"
@@ -47,8 +56,8 @@ const LoginForm: React.FC<{}> = () => {
               />
             </div>
 
-            <div>
-              <label htmlFor="password">Password</label>
+            <div style={{ margin: "10px" }}>
+              <label htmlFor="password">Password: </label>
               <Field
                 id="password"
                 name="password"
@@ -57,13 +66,20 @@ const LoginForm: React.FC<{}> = () => {
               />
             </div>
 
-            <AppButton type="submit" variant="contained">
-              Submit
-            </AppButton>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <Button type="submit" variant="outlined" color={"primary"}>
+                Submit
+              </Button>
+              {isError && (
+                <div style={{ color: "red" }}>
+                  <span>There has been an error, try again</span>
+                </div>
+              )}
+            </div>
           </Form>
         </Formik>
       )}
-    </>
+    </LoginContainer>
   );
 };
 

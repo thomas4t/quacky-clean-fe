@@ -1,5 +1,4 @@
-import { resolve } from "node:path";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 import UserAPI from "../api/user";
 import { useDidMount } from "../hooks/useDidMount";
 import { AccountContextState } from "../types/context";
@@ -23,16 +22,14 @@ export const AccountProvider: React.FC = ({ children }) => {
   const [activeUser, setActiveUser] = useState(initialValues.activeUser);
   const [isLogged, setIsLogged] = useState(initialValues.isLogged);
 
-  const updateJWT = (token: string) => {
-    //Update axios instance
-    webClient.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  const updateLocalJWT = (token: string) => {
     //Update local storage value
     localStorageApi.setValue("token", token);
   };
 
   const clearJWT = () => {
     localStorageApi.setValue("token", "");
-    webClient.defaults.headers.common["Authorization"] = "";
+    delete webClient.defaults.headers.common["Authorization"];
   };
 
   const login = async (payload: LoginData): Promise<boolean> => {
@@ -42,7 +39,7 @@ export const AccountProvider: React.FC = ({ children }) => {
     let didOkay = false;
     if (res.status === 201) {
       didOkay = true;
-      updateJWT(res.data.access_token);
+      updateLocalJWT(res.data.access_token);
       setActiveUser(payload.username);
       setIsLogged(true);
     }
@@ -52,20 +49,25 @@ export const AccountProvider: React.FC = ({ children }) => {
 
   const logout = async () => {
     clearJWT();
+    //Reload app
+    window.location.replace("/");
     setActiveUser("");
     setIsLogged(false);
   };
 
-  useDidMount(() => {
+  useDidMount(async () => {
     const initialCheck = async () => {
-      const validation = await UserAPI.validateCurrentToken();
-      if (validation.isValid) {
-        updateJWT(validation.token);
-        setActiveUser(validation.username);
-        setIsLogged(true);
+      const token = localStorageApi.getValue("token") as string;
+      if (token) {
+        const res = await UserAPI.validateToken(token);
+        if (res.status === 200) {
+          updateLocalJWT(token);
+          setActiveUser(res.data.username);
+          setIsLogged(true);
+        }
       }
     };
-    initialCheck();
+    await initialCheck();
   });
 
   return (
