@@ -8,6 +8,7 @@ import { ProductType } from "../../lib/types/product";
 import { getGlobalData, withGlobalData } from "../../lib/utils/globalData";
 import ProductCard from "../../components/product/ProductCard";
 import FullWidthContainer from "../../components/containers/FullWidthContainer";
+import Head from "next/head";
 
 function CategoryPage(props: { products: ProductType[] }) {
   const router = useRouter();
@@ -25,12 +26,22 @@ function CategoryPage(props: { products: ProductType[] }) {
   }
 
   return (
-    <FullWidthContainer>
-      <h1>Category {query.id}</h1>
-      {products.map((product) => (
-        <ProductCard key={product.ID_Product} item={product} />
-      ))}
-    </FullWidthContainer>
+    <>
+      <Head>
+        <title>QC | Category {router.query?.id}</title>
+        <meta
+          name="description"
+          content={`Category page of ${router.query?.id}`}
+        />
+      </Head>
+
+      <FullWidthContainer>
+        <h1>Category {query.id}</h1>
+        {products.map((product) => (
+          <ProductCard key={product.ID_Product} item={product} />
+        ))}
+      </FullWidthContainer>
+    </>
   );
 }
 

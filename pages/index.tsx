@@ -24,7 +24,7 @@ function IndexPage() {
   return (
     <>
       <Head>
-        <title>Quacky Clean Homepage</title>
+        <title>QC | Homepage</title>
         <meta name="description" content="Homepage of our awesome shop" />
       </Head>
 

@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useAccount } from "../../lib/context/AccountContext";
 import styled from "styled-components";
 import { Button } from "@material-ui/core";
+import { useSnackbar } from "notistack";
 
 const LoginContainer = styled.div`
   display: flex;
@@ -16,6 +17,7 @@ interface MyFormValues {
 
 const LoginForm: React.FC<{}> = () => {
   const account = useAccount();
+  const { enqueueSnackbar: notify } = useSnackbar();
   const [isError, setIsError] = useState(false);
   const initialValues: MyFormValues = { username: "", password: "" };
 
@@ -30,7 +32,9 @@ const LoginForm: React.FC<{}> = () => {
       password: values.password.trim(),
     });
     if (wasSuccess) {
-      alert("Success!");
+      notify("Logged in!", {
+        variant: "success",
+      });
     } else {
       setIsError(true);
     }

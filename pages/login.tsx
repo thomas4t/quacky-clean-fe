@@ -3,12 +3,20 @@ import React from "react";
 import FullWidthContainer from "../components/containers/FullWidthContainer";
 import LoginForm from "../components/user/LoginForm";
 import { getGlobalData, withGlobalData } from "../lib/utils/globalData";
+import Head from "next/head";
 
-function CategoryPage() {
+function LoginPage() {
   return (
-    <FullWidthContainer>
-      <LoginForm />
-    </FullWidthContainer>
+    <>
+      <Head>
+        <title>QC | Login</title>
+        <meta name="description" content="Login page to Quacky Clean shop" />
+      </Head>
+
+      <FullWidthContainer>
+        <LoginForm />
+      </FullWidthContainer>
+    </>
   );
 }
 
@@ -21,4 +29,4 @@ export const getStaticProps: GetStaticProps = async () => {
   };
 };
 
-export default withGlobalData(CategoryPage);
+export default withGlobalData(LoginPage);
