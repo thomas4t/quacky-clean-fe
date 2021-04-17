@@ -7,6 +7,8 @@ import { useSnackbar } from "notistack";
 
 const LoginContainer = styled.div`
   display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
 `;
 
@@ -45,6 +47,8 @@ const LoginForm: React.FC<{}> = () => {
 
   return (
     <LoginContainer>
+      <h1>Login</h1>
+
       {account.isLogged ? (
         <div>Already signed in!</div>
       ) : (

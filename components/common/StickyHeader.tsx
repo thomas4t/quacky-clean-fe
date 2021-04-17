@@ -11,6 +11,7 @@ import { AppButton } from "./AppButton";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import { useNavigateTo } from "../../lib/hooks/useNavigateTo";
 import { HEADER_Z_INDEX } from "../../lib/utils/constants";
+import PersonAddIcon from "@material-ui/icons/PersonAdd";
 
 const StickyHeaderContainer = styled.header`
   position: fixed;
@@ -105,6 +106,10 @@ function StickyHeader() {
     await navigateTo("login");
   };
 
+  const navigateToRegistration = async () => {
+    await navigateTo("register");
+  };
+
   return (
     <StickyHeaderContainer>
       <HomeLogoButton />
@@ -134,14 +139,19 @@ function StickyHeader() {
               Cart
               <ShoppingCartIcon fontSize="large" />
             </AppButton>
-
             <AccountDrawer />
           </LoggedInSection>
         ) : (
-          <AppButton onClick={navigateToLogin}>
-            <span>Login</span>
-            <LockOpenIcon fontSize="large" />
-          </AppButton>
+          <div>
+            <AppButton onClick={navigateToRegistration}>
+              Register &nbsp;
+              <PersonAddIcon />
+            </AppButton>
+            <AppButton onClick={navigateToLogin}>
+              <span>Login</span>
+              <LockOpenIcon fontSize="large" />
+            </AppButton>
+          </div>
         )}
       </UserSection>
     </StickyHeaderContainer>
