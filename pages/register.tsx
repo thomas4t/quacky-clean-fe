@@ -5,7 +5,7 @@ import { GetStaticProps } from "next";
 import Head from "next/head";
 import RegisterForm from "../components/user/RegisterForm";
 
-function LoginPage() {
+function RegisterPage() {
   return (
     <>
       <Head>
@@ -32,4 +32,4 @@ export const getStaticProps: GetStaticProps = async () => {
   };
 };
 
-export default withGlobalData(LoginPage);
+export default withGlobalData(RegisterPage);
