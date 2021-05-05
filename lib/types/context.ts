@@ -17,6 +17,7 @@ export type CategoriesContextState = {
 export type CartContextState = {
   items: CartProductType[];
   loadItems: () => void;
+  isLoading: boolean;
   // returns all products
   addItem: (payload: AddToCartPayload) => Promise<CartProductType[] | null>;
   clearItems: () => void;

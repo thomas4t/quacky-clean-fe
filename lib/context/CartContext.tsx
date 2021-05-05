@@ -6,6 +6,7 @@ import { AddToCartPayload, CartProductType } from "../types/product";
 const initialValues: CartContextState = {
   items: [],
   loadItems: () => {},
+  isLoading: false,
   addItem: ({}) =>
     new Promise((resolve) => {
       resolve([]);
@@ -16,17 +17,20 @@ const initialValues: CartContextState = {
 const CartContext = createContext<CartContextState>(initialValues);
 
 export const CartProvider: React.FC = ({ children }) => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [items, setItems] = useState<CartContextState["items"]>(
     initialValues.items
   );
 
   const loadItems = async () => {
+    setIsLoading(true);
     const res = await CartAPI.getAll();
     // if(res.)
     //setItems
     if (res.status === 200) {
       setItems(res.data);
     }
+    setIsLoading(false);
   };
 
   const addItem = async (
@@ -48,6 +52,7 @@ export const CartProvider: React.FC = ({ children }) => {
       value={{
         items,
         loadItems,
+        isLoading,
         addItem,
         clearItems,
       }}

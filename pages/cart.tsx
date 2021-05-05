@@ -37,7 +37,7 @@ const StyledButton = styled(Button)`
 `;
 
 function CartPage() {
-  const { items, loadItems, clearItems } = useCart();
+  const { items, loadItems, isLoading, clearItems } = useCart();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const totalCartPrice = items
@@ -74,7 +74,10 @@ function CartPage() {
       <FullWidthContainer>
         <CartContainer>
           <h1>Cart</h1>
-          {isCartEmpty ? (
+
+          {isLoading ? (
+            <Loader />
+          ) : isCartEmpty ? (
             <h2>Seems there is nothing there :C</h2>
           ) : (
             <>
