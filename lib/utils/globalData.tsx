@@ -10,7 +10,7 @@ export const getGlobalData = async () => {
 };
 
 // Whoever reads this, appreciate it
-// Because holy shit ... was it painful to write
+// Because holy !&#@# ... was it painful to write
 type WithGlobalDataProps = {
   categories: CategoryType[];
 };

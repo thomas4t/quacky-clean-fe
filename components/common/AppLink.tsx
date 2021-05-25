@@ -8,11 +8,10 @@ const StyledLink = styled(Link)`
     text-decoration: underline;
     color: ${(props) => props.theme.linkCol};
     :hover {
-      color: ${(props) => props.theme.primary}
+      color: ${(props) => props.theme.primary};
       opacity: 90%;
-    }  
+    }
   }
-  
 `;
 
 const AppLink = (props: {

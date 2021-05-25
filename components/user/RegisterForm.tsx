@@ -84,21 +84,7 @@ function RegisterForm() {
             values: FormValues,
             { setSubmitting }: FormikHelpers<FormValues>
           ) => {
-            // console.log(values);
-            // const data: RegistrationPayload = {
-            //   login: "xx",
-            //   password: "xx",
-            //   first_name: "xx",
-            //   last_name: "xx",
-            //   email: "xx",
-            //   phone: "xx",
-            //   street_name: "xx",
-            //   house_number: "xx",
-            //   zip_code: 132,
-            //   city: "xx",
-            // };
             const res = await UserAPI.register(mapFormValuesToPayload(values));
-            // const res = await UserAPI.register(data);
             if (res.status === 201) {
               setSubmittedOkay(true);
             } else {

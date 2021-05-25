@@ -12,6 +12,27 @@ const LoginContainer = styled.div`
   justify-content: center;
 `;
 
+const CredentialContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const StyledFormField = styled(Field)`
+  padding: 2px 0;
+  margin: 10px 0 10px 5px;
+`;
+
+const StyledFormLabel = styled.label`
+  font-weight: bold;
+`;
+
+const SubmitSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`;
+
 interface MyFormValues {
   username: string;
   password: string;
@@ -54,36 +75,36 @@ const LoginForm: React.FC<{}> = () => {
       ) : (
         <Formik initialValues={initialValues} onSubmit={onSubmit}>
           <Form>
-            <div style={{ margin: "10px" }}>
-              <label htmlFor="username">Username: </label>
-
-              <Field
+            <CredentialContainer>
+              <StyledFormLabel htmlFor="username">Username: </StyledFormLabel>
+              <StyledFormField
                 id="username"
                 name="username"
                 placeholder="Username, not email pls"
               />
-            </div>
+            </CredentialContainer>
 
-            <div style={{ margin: "10px" }}>
-              <label htmlFor="password">Password: </label>
-              <Field
+            <CredentialContainer>
+              <StyledFormLabel htmlFor="password">Password: </StyledFormLabel>
+              <StyledFormField
                 id="password"
                 name="password"
                 placeholder="super secret"
                 type="password"
               />
-            </div>
+            </CredentialContainer>
 
-            <div style={{ display: "flex", justifyContent: "center" }}>
+            <SubmitSection>
               <Button type="submit" variant="outlined" color={"primary"}>
                 Submit
               </Button>
+
               {isError && (
                 <div style={{ color: "red" }}>
                   <span>There has been an error, try again</span>
                 </div>
               )}
-            </div>
+            </SubmitSection>
           </Form>
         </Formik>
       )}
